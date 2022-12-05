@@ -2,10 +2,7 @@
 
 Training n°1 for NFT marketplace
 
-Introduction : Business objects managed by a blockchain are called `assets`. On Tezos you will find the term `Financial Asset`.
-Here below different categorization of assets.
-
-![](http://jingculturecommerce.com/wp-content/uploads/2021/03/nft-assets-1024x614.jpg)
+http://jingculturecommerce.com/wp-content/uploads/2021/03/nft-assets-1024x614.jpg
 
 <PHOTO hacker wine here>
 
@@ -95,62 +92,9 @@ We will rely on Ligo FA library. To understand in detail how works asset on Tezo
 Install the ligo fa library locally
 
 ```bash
-TAQ_LIGO_IMAGE=ligolang/ligo:0.56.0 taq ligo --command "install @ligo/fa"
-```
+ligo install @ligo/fa
 
-## NFT marketplace contract
-
-Create the nft marketplace contract with taqueria
-
-```bash
-taq create contract nft.jsligo
-```
-
-Remove the default code and paste this code instead
-
-```jsligo
-#import "@ligo/fa/lib/fa2/nft/NFT.jsligo" "NFT"
-
-/* ERROR MAP FOR UI DISPLAY or TESTS
-    const errorMap : map<string,string> = Map.literal(list([
-      ["0", "Enter a positive and not null amount"],
-      ["1", "Operation not allowed, you need to be administrator"],
-      ["2", "You cannot sell more than your current balance"],
-      ["3", "Cannot find the offer you entered for buying"],
-      ["4", "You entered a quantity to buy than is more than the offer quantity"],
-      ["5", "Not enough funds, you need to pay at least quantity * offer price to get the tokens"],
-      ["6", "Cannot find the contract relative to implicit address"],
-    ]));
-*/
-
-type storage =
-  {
-    administrators: set<address>,
-    ledger: NFT.Ledger.t,
-    metadata: NFT.Metadata.t,
-    token_metadata: NFT.TokenMetadata.t,
-    operators: NFT.Operators.t,
-    token_ids : set<NFT.Storage.token_id>
-  };
-
-type ret = [list<operation>, storage];
-
-type parameter =
-  | ["Mint", nat,bytes,bytes,bytes,bytes] //token_id, name , description  ,symbol , ipfsUrl
-  | ["AddAdministrator" , address]
-  | ["Transfer", NFT.transfer]
-  | ["Balance_of", NFT.balance_of]
-  | ["Update_operators", NFT.update_operators];
-
-
-const main = ([p, s]: [parameter,storage]): ret =>
-    match(p, {
-     Mint: (p: [nat,bytes,bytes,bytes,bytes]) => [list([]),s],
-     AddAdministrator : (p : address) => {if(Set.mem(Tezos.get_sender(), s.administrators)){ return [list([]),{...s,administrators:Set.add(p, s.administrators)}]} else {return failwith("1");}} ,
-     Transfer: (p: NFT.transfer) => [list([]),s],
-     Balance_of: (p: NFT.balance_of) => [list([]),s],
-     Update_operators: (p: NFT.update_operator) => [list([]),s],
-     });
+TAQ_LIGO_IMAGE=ligolang/ligo:0.56.0 taq compile nft.jsligo
 ```
 
 Explanations :
