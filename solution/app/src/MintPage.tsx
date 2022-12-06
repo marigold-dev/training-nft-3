@@ -26,7 +26,6 @@ export default function MintPage() {
   const {
     nftContrat,
     refreshUserContextOnPageReload,
-    storage,
     nftContratTokenMetadataMap,
   } = React.useContext(UserContext) as UserContextType;
   const { enqueueSnackbar } = useSnackbar();

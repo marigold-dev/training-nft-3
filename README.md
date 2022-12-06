@@ -6,7 +6,7 @@ Training n°3 for NFT marketplace
 
 This time we are gone use the single asset template. It is a bit the contrary of the nft template.
 
-- you have only 1 token_id, so one 1 wine collection
+- you have only 1 token_id, so only 1 wine collection
 - you have a quantity of items into the same collection
 
 To resume, you are producting wine bottles from same collection with n quantity
@@ -265,7 +265,6 @@ export default function MintPage() {
   const {
     nftContrat,
     refreshUserContextOnPageReload,
-    storage,
     nftContratTokenMetadataMap,
   } = React.useContext(UserContext) as UserContextType;
   const { enqueueSnackbar } = useSnackbar();
