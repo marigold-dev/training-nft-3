@@ -10,7 +10,9 @@ import { UserContext, UserContextType } from "./App";
 import Header from "./Header";
 import MintPage from "./MintPage";
 import Navigator, { PagesPaths } from "./Navigator";
+import OffersPage from "./OffersPage";
 import Welcome from "./Welcome";
+import WineCataloguePage from "./WineCataloguePage";
 
 function Copyright() {
   return (
@@ -219,6 +221,8 @@ export default function Paperbase() {
             }
           >
             <Route index element={<Welcome />} />
+            <Route path={PagesPaths.CATALOG} element={<WineCataloguePage />} />
+            <Route path={PagesPaths.OFFERS} element={<OffersPage />} />
             <Route path={PagesPaths.MINT} element={<MintPage />} />
           </Route>
         </Routes>

@@ -1,29 +1,10 @@
 {
     "operations": {},
     "tasks": {
-        "@taqueria/plugin-ligo.compile.1670236353406": {
+        "@taqueria/plugin-ligo.compile.1670311989421": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1670236353406,
-            "output": [
-                {
-                    "contract": "nft.jsligo",
-                    "artifact": "artifacts/nft.tz"
-                },
-                {
-                    "contract": "nft.storageList.jsligo",
-                    "artifact": ""
-                },
-                {
-                    "contract": "nft.parameterList.jsligo",
-                    "artifact": ""
-                }
-            ]
-        },
-        "@taqueria/plugin-ligo.compile.1670236460963": {
-            "task": "compile",
-            "plugin": "@taqueria/plugin-ligo",
-            "time": 1670236460963,
+            "time": 1670311989421,
             "output": [
                 {
                     "contract": "nft.jsligo",
@@ -31,10 +12,10 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1670236496004": {
+        "@taqueria/plugin-ligo.compile.1670312008914": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1670236496004,
+            "time": 1670312008914,
             "output": [
                 {
                     "contract": "nft.jsligo",
@@ -50,10 +31,10 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1670236602042": {
+        "@taqueria/plugin-ligo.compile.1670312050406": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1670236602042,
+            "time": 1670312050406,
             "output": [
                 {
                     "contract": "nft.jsligo",
@@ -61,7 +42,7 @@
                 },
                 {
                     "contract": "nft.storageList.jsligo",
-                    "artifact": ""
+                    "artifact": "artifacts/nft.default_storage.tz\n"
                 },
                 {
                     "contract": "nft.parameterList.jsligo",
@@ -69,10 +50,29 @@
                 }
             ]
         },
-        "@taqueria/plugin-ligo.compile.1670236625004": {
+        "@taqueria/plugin-ligo.compile.1670312212533": {
             "task": "compile",
             "plugin": "@taqueria/plugin-ligo",
-            "time": 1670236625004,
+            "time": 1670312212533,
+            "output": [
+                {
+                    "contract": "nft.jsligo",
+                    "artifact": "artifacts/nft.tz"
+                },
+                {
+                    "contract": "nft.storageList.jsligo",
+                    "artifact": "artifacts/nft.default_storage.tz\n"
+                },
+                {
+                    "contract": "nft.parameterList.jsligo",
+                    "artifact": ""
+                }
+            ]
+        },
+        "@taqueria/plugin-ligo.compile.1670315054275": {
+            "task": "compile",
+            "plugin": "@taqueria/plugin-ligo",
+            "time": 1670315054275,
             "output": [
                 {
                     "contract": "nft.jsligo",

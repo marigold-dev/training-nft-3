@@ -1,76 +1,80 @@
 {
-  "language": "en",
-  "contractsDir": "contracts",
-  "artifactsDir": "artifacts",
-  "contracts": {
-    "nft.jsligo": {
-      "sourceFile": "nft.jsligo",
-      "hash": "5737454d4dd7c3947452a5d2003c30353b62f19a6d73f98ad830a187574b3751"
-    }
-  },
-  "network": {
-    "ghostnet": {
-      "label": "ghostnet",
-      "rpcUrl": "https://ghostnet.ecadinfra.com",
-      "protocol": "PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg",
-      "accounts": {
-        "taqOperatorAccount": {
-          "publicKey": "edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn",
-          "publicKeyHash": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-          "privateKey": "edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq"
+    "language": "en",
+    "contractsDir": "contracts",
+    "artifactsDir": "artifacts",
+    "contracts": {
+        "nft.jsligo": {
+            "sourceFile": "nft.jsligo",
+            "hash": "5737454d4dd7c3947452a5d2003c30353b62f19a6d73f98ad830a187574b3751"
         }
-      }
-    }
-  },
-  "sandbox": {
-    "local": {
-      "label": "Local Tezos Sandbox",
-      "rpcUrl": "http://localhost:20000",
-      "protocol": "PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg"
-    }
-  },
-  "environment": {
-    "default": "development",
-    "development": {
-      "networks": [],
-      "sandboxes": ["local"]
     },
-    "testing": {
-      "networks": ["ghostnet"],
-      "sandboxes": [],
-      "aliases": {
-        "nft": {
-          "address": "KT1Jdft9yo52tgZSiG4X6tpJCmmSd4SG8bsV"
+    "network": {
+        "ghostnet": {
+            "label": "ghostnet",
+            "rpcUrl": "https://ghostnet.ecadinfra.com",
+            "protocol": "PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg",
+            "accounts": {
+                "taqOperatorAccount": {
+                    "publicKey": "edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn",
+                    "publicKeyHash": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+                    "privateKey": "edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq"
+                }
+            }
         }
-      }
-    }
-  },
-  "accounts": {
-    "bob": "3_000_000_000",
-    "alice": "3_000_000_000",
-    "john": "3_000_000_000",
-    "jane": "3_000_000_000",
-    "joe": "3_000_000_000"
-  },
-  "plugins": [
-    {
-      "name": "@taqueria/plugin-core",
-      "type": "npm"
     },
-    {
-      "name": "@taqueria/plugin-ligo",
-      "type": "npm"
+    "sandbox": {
+        "local": {
+            "label": "Local Tezos Sandbox",
+            "rpcUrl": "http://localhost:20000",
+            "protocol": "PtKathmankSpLLDALzWw7CGD2j2MtyveTwboEYokqUCP4a1LxMg"
+        }
     },
-    {
-      "name": "@taqueria/plugin-taquito",
-      "type": "npm"
+    "environment": {
+        "default": "development",
+        "development": {
+            "networks": [],
+            "sandboxes": [
+                "local"
+            ]
+        },
+        "testing": {
+            "networks": [
+                "ghostnet"
+            ],
+            "sandboxes": [],
+            "aliases": {
+                "nft": {
+                    "address": "KT1QyJW133XNM5xyMixG1LRk17ComsrdNnsA"
+                }
+            }
+        }
     },
-    {
-      "name": "@taqueria/plugin-contract-types",
-      "type": "npm"
-    }
-  ],
-  "projectDir": "/home/zamrokk/training-nft-1",
-  "configFile": "/home/zamrokk/training-nft-1/.taq/config.json",
-  "hash": "5237a67af17d3f2c1f2d06ae7c58dc5e808f2536af74e7dde0589e964e1d04d5"
+    "accounts": {
+        "bob": "3_000_000_000",
+        "alice": "3_000_000_000",
+        "john": "3_000_000_000",
+        "jane": "3_000_000_000",
+        "joe": "3_000_000_000"
+    },
+    "plugins": [
+        {
+            "name": "@taqueria/plugin-core",
+            "type": "npm"
+        },
+        {
+            "name": "@taqueria/plugin-ligo",
+            "type": "npm"
+        },
+        {
+            "name": "@taqueria/plugin-taquito",
+            "type": "npm"
+        },
+        {
+            "name": "@taqueria/plugin-contract-types",
+            "type": "npm"
+        }
+    ],
+    "projectDir": "/home/zamrokk/training-nft-3/solution",
+    "configFile": "/home/zamrokk/training-nft-3/solution/.taq/config.json",
+    "hash": "8a548a72d38482c77e1eb4143aa29c5cefa5e65c538e22f43ee8c81761b106f3"
 }

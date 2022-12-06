@@ -1,25 +1,26 @@
-import { AddCircleOutlined } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  Card,
-  CardContent,
   CardHeader,
   CardMedia,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
-import { char2Bytes } from "@taquito/utils";
+import Typography from "@mui/material/Typography";
 import { BigNumber } from "bignumber.js";
-import { useFormik } from "formik";
 import { useSnackbar } from "notistack";
-import React, { Fragment, useEffect, useState } from "react";
-import * as yup from "yup";
+import React, { Fragment, useState } from "react";
 import { TZIP21TokenMetadata, UserContext, UserContextType } from "./App";
 import { TransactionInvalidBeaconError } from "./TransactionInvalidBeaconError";
+
+import { AddCircleOutlined } from "@mui/icons-material";
+import { char2Bytes } from "@taquito/utils";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import { bytes, nat } from "./type-aliases";
 export default function MintPage() {
   const {
@@ -36,6 +37,10 @@ export default function MintPage() {
     name: yup.string().required("Name is required"),
     description: yup.string().required("Description is required"),
     symbol: yup.string().required("Symbol is required"),
+    quantity: yup
+      .number()
+      .required("Quantity is required")
+      .positive("ERROR: The number must be greater than 0!"),
   });
 
   const formik = useFormik({
@@ -44,22 +49,17 @@ export default function MintPage() {
       description: "",
       token_id: 0,
       symbol: "WINE",
-    } as TZIP21TokenMetadata,
+      quantity: 1,
+    } as TZIP21TokenMetadata & { quantity: number },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       mint(values);
     },
   });
 
-  useEffect(() => {
-    (async () => {
-      if (storage && storage.token_ids.length > 0) {
-        formik.setFieldValue("token_id", storage?.token_ids.length);
-      }
-    })();
-  }, [storage?.token_ids]);
-
-  const mint = async (newTokenDefinition: TZIP21TokenMetadata) => {
+  const mint = async (
+    newTokenDefinition: TZIP21TokenMetadata & { quantity: number }
+  ) => {
     try {
       //IPFS
       if (file) {
@@ -95,7 +95,7 @@ export default function MintPage() {
 
         const op = await nftContrat!.methods
           .mint(
-            new BigNumber(newTokenDefinition.token_id) as nat,
+            new BigNumber(newTokenDefinition.quantity) as nat,
             char2Bytes(newTokenDefinition.name!) as bytes,
             char2Bytes(newTokenDefinition.description!) as bytes,
             char2Bytes(newTokenDefinition.symbol!) as bytes,
@@ -171,6 +171,18 @@ export default function MintPage() {
                 formik.touched.description && formik.errors.description
               }
               variant="standard"
+            />
+
+            <TextField
+              id="standard-basic"
+              name="quantity"
+              label="quantity"
+              value={formik.values.quantity}
+              onChange={formik.handleChange}
+              error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+              helperText={formik.touched.quantity && formik.errors.quantity}
+              variant="standard"
+              type={"number"}
             />
 
             <img src={pictureUrl} />
