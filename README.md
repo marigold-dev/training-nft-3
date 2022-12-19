@@ -69,7 +69,7 @@ We don't change `parameter` type because the signature is the same, but you can 
 
 ```jsligo
 type parameter =
-  | ["Mint", nat,bytes,bytes,bytes,bytes] //token_id, name , description  ,symbol , ipfsUrl
+  | ["Mint", nat,bytes,bytes,bytes,bytes] // quantity, name , description ,symbol , bytesipfsUrl
   | ["Buy", nat, address]  //buy quantity at a seller offer price
   | ["Sell", nat, nat]  //sell quantity at a price
   | ["AddAdministrator" , address]
@@ -170,6 +170,30 @@ const buy = (quantity: nat, seller: address, s: storage) : ret => {
     }
   });
 };
+```
+
+Finally, update the namespaces and replace token_ids by owners on the `main` function
+
+```jsligo
+const main = ([p, s]: [parameter,storage]): ret =>
+    match(p, {
+     Mint: (p: [nat,bytes,bytes,bytes,bytes]) => mint(p[0],p[1],p[2],p[3],p[4],s),
+     Buy: (p : [nat,address]) => buy(p[0],p[1],s),
+     Sell: (p : [nat,nat]) => sell(p[0],p[1], s),
+     AddAdministrator : (p : address) => {if(Set.mem(Tezos.get_sender(), s.administrators)){ return [list([]),{...s,administrators:Set.add(p, s.administrators)}]} else {return failwith("1");}} ,
+     Transfer: (p: SINGLEASSET.transfer) => {
+      const ret2 : [list<operation>, SINGLEASSET.storage] = SINGLEASSET.transfer(p)({ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,owners:s.owners});
+      return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
+     },
+     Balance_of: (p: SINGLEASSET.balance_of) => {
+      const ret2 : [list<operation>, SINGLEASSET.storage] = SINGLEASSET.balance_of(p)({ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,owners:s.owners});
+      return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
+      },
+     Update_operators: (p: SINGLEASSET.update_operator) => {
+      const ret2 : [list<operation>, SINGLEASSET.storage] = SINGLEASSET.update_ops(p)({ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,owners:s.owners});
+      return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
+      }
+     });
 ```
 
 Edit the storage file `nft.storageList.jsligo` as it. (:warning: you can change the `administrator` address to your own address or keep `alice`)
