@@ -48,7 +48,7 @@ type storage =
   {
     administrators: set<address>,
     totalSupply: nat,
-    offers: map<address,bid>,  //user sells an offer
+    offers: map<address,offer>,  //user sells an offer
     ledger: SINGLEASSET.Ledger.t,
     metadata: SINGLEASSET.Metadata.t,
     token_metadata: SINGLEASSET.TokenMetadata.t,
@@ -65,23 +65,56 @@ Explanations :
 - Because the ledger is made of big map of key `owners`, we cache the keys to be able to loop on it
 - we remove `token_ids` has we have an unique collection, token_id will be set to `0`
 
-We don't change `parameter` type because the signature is the same, but you can edit the comments because it is no more same parameter
+We don't change `parameter` type because the signature is the same, but you can edit the comments because it is no more same parameter and change also to the new namespace `SINGLEASSET`
 
 ```jsligo
+type parameter =
+  | ["Mint", nat,bytes,bytes,bytes,bytes] //token_id, name , description  ,symbol , ipfsUrl
   | ["Buy", nat, address]  //buy quantity at a seller offer price
   | ["Sell", nat, nat]  //sell quantity at a price
+  | ["AddAdministrator" , address]
+  | ["Transfer", SINGLEASSET.transfer]
+  | ["Balance_of", SINGLEASSET.balance_of]
+  | ["Update_operators", SINGLEASSET.update_operators];
 ```
 
-Edit the `mint` function first lines to add the `quantity` extra param, and finally the `return` end of the function
+Edit the `mint` function first lines to add the `quantity` extra param, and finally change the `return` end of the function
 
 ```jsligo
 const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsUrl:bytes, s : storage) : ret => {
 
    if(quantity <= (0 as nat)) return failwith("0");
 
-   ...
+   if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("1");
 
-       return [list([]) as list<operation>,
+   const token_info: map<string, bytes> =
+     Map.literal(list([
+      ["name", name],
+      ["description",description],
+      ["interfaces", (bytes `["TZIP-12"]`)],
+      ["thumbnailUri", ipfsUrl],
+      ["symbol",symbol],
+      ["decimals", (bytes `0`)]
+     ])) as map<string, bytes>;
+
+
+    const metadata : bytes = bytes
+  `{
+      "name":"FA2 NFT Marketplace",
+      "description":"Example of FA2 implementation",
+      "version":"0.0.1",
+      "license":{"name":"MIT"},
+      "authors":["Marigold<contact@marigold.dev>"],
+      "homepage":"https://marigold.dev",
+      "source":{
+        "tools":["Ligo"],
+        "location":"https://github.com/ligolang/contract-catalogue/tree/main/lib/fa2"},
+      "interfaces":["TZIP-012"],
+      "errors": [],
+      "views": []
+      }` ;
+
+     return [list([]) as list<operation>,
           {...s,
      totalSupply: quantity,
      ledger: Big_map.literal(list([[Tezos.get_sender(),quantity as nat]])) as SINGLEASSET.Ledger.t,
@@ -160,7 +193,7 @@ const default_storage =
 Compile again and deploy to ghostnet
 
 ```bash
-TAQ_LIGO_IMAGE=ligolang/ligo:0.56.0 taq compile nft.jsligo
+TAQ_LIGO_IMAGE=ligolang/ligo:0.57.0 taq compile nft.jsligo
 taq deploy nft.tz -e "testing"
 ```
 
