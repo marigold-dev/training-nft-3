@@ -1,23 +1,34 @@
+import { InfoOutlined } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
+
 import {
-  Avatar,
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
+  CardMedia,
+  ImageList,
+  InputAdornment,
+  Pagination,
   TextField,
+  Tooltip,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import BigNumber from "bignumber.js";
 import { useFormik } from "formik";
 import { useSnackbar } from "notistack";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import * as yup from "yup";
 import { UserContext, UserContextType } from "./App";
+import ConnectButton from "./ConnectWallet";
 import { TransactionInvalidBeaconError } from "./TransactionInvalidBeaconError";
 import { address, nat } from "./type-aliases";
+
+const itemPerPage: number = 6;
 
 const validationSchema = yup.object({
   price: yup
@@ -37,6 +48,7 @@ type Offer = {
 
 export default function OffersPage() {
   const [selectedTokenId, setSelectedTokenId] = React.useState<number>(0);
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(1);
 
   let [ownerOffers, setOwnerOffers] = React.useState<Offer | null>(null);
   let [ownerBalance, setOwnerBalance] = React.useState<number>(0);
@@ -47,6 +59,10 @@ export default function OffersPage() {
     userAddress,
     storage,
     refreshUserContextOnPageReload,
+    Tezos,
+    setUserAddress,
+    setUserBalance,
+    wallet,
   } = React.useContext(UserContext) as UserContextType;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -146,85 +162,154 @@ export default function OffersPage() {
     }
   };
 
+  const isDesktop = useMediaQuery("(min-width:1100px)");
+  const isTablet = useMediaQuery("(min-width:600px)");
   return (
-    <Box
-      component="main"
-      sx={{
-        flex: 1,
-        py: 6,
-        px: 4,
-        bgcolor: "#eaeff1",
-        backgroundImage:
-          "url(https://en.vinex.market/skin/default/images/banners/home/new/banner-1180.jpg)",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
-    >
-      <Paper sx={{ maxWidth: 936, margin: "auto", overflow: "hidden" }}>
-        {ownerBalance !== 0 ? (
-          <Card key={userAddress + "-0"}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: "purple" }} aria-label="recipe">
-                  {0}
-                </Avatar>
-              }
-              title={nftContratTokenMetadataMap.get(0)?.name}
-            />
+    <Paper>
+      <Typography style={{ paddingBottom: "10px" }} variant="h5">
+        Sell my bottles
+      </Typography>
+      {ownerBalance != 0 ? (
+        <Fragment>
+          <Pagination
+            page={currentPageIndex}
+            onChange={(_, value) => setCurrentPageIndex(value)}
+            count={Math.ceil(1 / itemPerPage)}
+            showFirstButton
+            showLastButton
+          />
 
-            <CardContent>
-              <div>{"Owned : " + ownerBalance}</div>
+          <ImageList
+            cols={isDesktop ? itemPerPage / 2 : isTablet ? itemPerPage / 3 : 1}
+          >
+            <Card key={userAddress + "-" + 0}>
+              <CardHeader
+                avatar={
+                  <Tooltip
+                    title={
+                      <Box>
+                        <Typography>{"ID : " + 0}</Typography>
+                        <Typography>
+                          {"Description : " +
+                            nftContratTokenMetadataMap.get(0)?.description}
+                        </Typography>
+                      </Box>
+                    }
+                  >
+                    <InfoOutlined />
+                  </Tooltip>
+                }
+                title={nftContratTokenMetadataMap.get(0)?.name}
+              />
+              <CardMedia
+                sx={{ width: "auto", marginLeft: "33%" }}
+                component="img"
+                height="100px"
+                image={nftContratTokenMetadataMap
+                  .get(0)
+                  ?.thumbnailUri?.replace(
+                    "ipfs://",
+                    "https://gateway.pinata.cloud/ipfs/"
+                  )}
+              />
 
-              {ownerOffers
-                ? "Offer :" +
-                  ownerOffers?.quantity +
-                  " at price " +
-                  ownerOffers?.price.dividedBy(1000000) +
-                  " XTZ/bottle"
-                : ""}
-            </CardContent>
+              <CardContent>
+                <Box>
+                  <Typography variant="body2">
+                    {"Owned : " + ownerBalance}
+                  </Typography>
+                  <Typography variant="body2">
+                    {ownerOffers
+                      ? "Traded : " +
+                        ownerOffers?.quantity +
+                        " (price : " +
+                        ownerOffers?.price.dividedBy(1000000) +
+                        " Tz/b)"
+                      : ""}
+                  </Typography>
+                </Box>
+              </CardContent>
 
-            <CardActions disableSpacing>
-              <form
-                onSubmit={(values) => {
-                  setSelectedTokenId(0);
-                  formik.handleSubmit(values);
-                }}
-              >
-                <TextField
-                  name="quantity"
-                  label="quantity"
-                  placeholder="Enter a quantity"
-                  variant="standard"
-                  type="number"
-                  value={formik.values.quantity}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.quantity && Boolean(formik.errors.quantity)
-                  }
-                  helperText={formik.touched.quantity && formik.errors.quantity}
-                />
-                <TextField
-                  name="price"
-                  label="price/bottle (XTZ)"
-                  placeholder="Enter a price"
-                  variant="standard"
-                  type="number"
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                  error={formik.touched.price && Boolean(formik.errors.price)}
-                  helperText={formik.touched.price && formik.errors.price}
-                />
-                <Button type="submit" aria-label="add to favorites">
-                  <SellIcon /> SELL
-                </Button>
-              </form>
-            </CardActions>
-          </Card>
-        ) : (
-          <Fragment />
-        )}
-      </Paper>
-    </Box>
+              <CardActions>
+                {!userAddress ? (
+                  <Box marginLeft="5vw">
+                    <ConnectButton
+                      Tezos={Tezos}
+                      nftContratTokenMetadataMap={nftContratTokenMetadataMap}
+                      setUserAddress={setUserAddress}
+                      setUserBalance={setUserBalance}
+                      wallet={wallet}
+                    />
+                  </Box>
+                ) : (
+                  <form
+                    style={{ width: "100%" }}
+                    onSubmit={(values) => {
+                      setSelectedTokenId(0);
+                      formik.handleSubmit(values);
+                    }}
+                  >
+                    <span>
+                      <TextField
+                        type="number"
+                        sx={{ width: "40%" }}
+                        name="price"
+                        label="price/bottle"
+                        placeholder="Enter a price"
+                        variant="filled"
+                        value={formik.values.price}
+                        onChange={formik.handleChange}
+                        error={
+                          formik.touched.price && Boolean(formik.errors.price)
+                        }
+                        helperText={formik.touched.price && formik.errors.price}
+                      />
+                      <TextField
+                        sx={{
+                          width: "60%",
+                          bottom: 0,
+                          position: "relative",
+                        }}
+                        type="number"
+                        label="quantity"
+                        name="quantity"
+                        placeholder="Enter a quantity"
+                        variant="filled"
+                        value={formik.values.quantity}
+                        onChange={formik.handleChange}
+                        error={
+                          formik.touched.quantity &&
+                          Boolean(formik.errors.quantity)
+                        }
+                        helperText={
+                          formik.touched.quantity && formik.errors.quantity
+                        }
+                        InputProps={{
+                          inputProps: { min: 0, max: ownerBalance },
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <Button
+                                type="submit"
+                                aria-label="add to favorites"
+                              >
+                                <SellIcon /> Sell
+                              </Button>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </span>
+                  </form>
+                )}
+              </CardActions>
+            </Card>
+          </ImageList>
+        </Fragment>
+      ) : (
+        <Typography sx={{ py: "2em" }} variant="h4">
+          Sorry, you don't own any bottles, buy or mint some first
+        </Typography>
+      )}
+    </Paper>
   );
 }

@@ -225,7 +225,7 @@ taq deploy nft.tz -e "testing"
 ┌──────────┬──────────────────────────────────────┬───────┬──────────────────┬────────────────────────────────┐
 │ Contract │ Address                              │ Alias │ Balance In Mutez │ Destination                    │
 ├──────────┼──────────────────────────────────────┼───────┼──────────────────┼────────────────────────────────┤
-│ nft.tz   │ KT1JdcTUeDa67JXYydTyeZj8A532zFGq4Zta │ nft   │ 0                │ https://ghostnet.ecadinfra.com │
+│ nft.tz   │ KT1HAxs2RuoxWni1WqabGJjBvnkGtyNwVFSX │ nft   │ 0                │ https://ghostnet.ecadinfra.com │
 └──────────┴──────────────────────────────────────┴───────┴──────────────────┴────────────────────────────────┘
 ```
 
@@ -1320,10 +1320,14 @@ export default function WineCataloguePage() {
 3. Click on `Upload an image` an select a bottle picture on your computer
 4. Click on Mint button
 
+![minting.png](./doc/minting.png)
+
 Your picture will be pushed to IPFS and will display, then you are asked to sign the mint operation
 
 - Confirm operation
 - Wait less than 1 minutes until you get the confirmation notification, the page will refresh automatically
+
+![minted.png](./doc/minted.png)
 
 Now you can see the `Trading` menu and the `Bottle offers` sub menu
 
@@ -1336,6 +1340,8 @@ You are owner of this bottle so you can make an offer on it
 - Click on `SELL` button
 - Wait a bit for the confirmation, then it refreshes and you have an offer attached to your NFT
 
+![offer.png](./doc/offer.png)
+
 For buying,
 
 - Disconnect from your user and connect with another account (who has enough XTZ to buy at least 1 bottle)
@@ -1344,6 +1350,8 @@ For buying,
 - Wait for the confirmation, then the offer is updated on the market (depending how many bottle you bought)
 - Click on `bottle offers` sub menu
 - You are now the owner of some bottles, you can resell a part of it at your own price, etc ...
+
+![buy.png](./doc/buy.png)
 
 # :palm_tree: Conclusion :sun_with_face:
 

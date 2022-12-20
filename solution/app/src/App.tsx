@@ -20,6 +20,7 @@ export type TZIP21TokenMetadata = TokenMetadata & {
 export type UserContextType = {
   storage: Storage | null;
   userAddress: string;
+  userBalance: number;
   setUserAddress: Dispatch<SetStateAction<string>>;
   Tezos: TezosToolkit;
   setUserBalance: Dispatch<SetStateAction<number>>;
@@ -47,7 +48,7 @@ function App() {
   >(new Map());
 
   const [Tezos, setTezos] = useState<TezosToolkit>(
-    new TezosToolkit("https://ghostnet.tezos.marigold.dev")
+    new TezosToolkit(process.env["REACT_APP_TEZOS_NODE"]!)
   );
   const [wallet, setWallet] = useState<BeaconWallet>(
     new BeaconWallet({
@@ -109,6 +110,7 @@ function App() {
     <UserContext.Provider
       value={{
         userAddress,
+        userBalance,
         setUserAddress,
         Tezos,
         setUserBalance,

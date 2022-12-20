@@ -1,6 +1,5 @@
 #import "@ligo/fa/lib/fa2/asset/single_asset.mligo" "SINGLEASSET"
 
-
 /* ERROR MAP FOR UI DISPLAY or TESTS
     const errorMap : map<string,string> = Map.literal(list([
       ["0", "Enter a positive and not null amount"],
@@ -8,7 +7,7 @@
       ["2", "You cannot sell more than your current balance"],
       ["3", "Cannot find the offer you entered for buying"],
       ["4", "You entered a quantity to buy than is more than the offer quantity"],
-      ["5", "Not enough funds, you need to pay at least quantity * price to get the tokens"],
+      ["5", "Not enough funds, you need to pay at least quantity * offer price to get the tokens"],
       ["6", "Cannot find the contract relative to implicit address"],
     ]));
 */
@@ -33,22 +32,21 @@ type storage =
 type ret = [list<operation>, storage];
 
 type parameter =
-  | ["Mint", nat,bytes,bytes,bytes,bytes] // quantity, name , description ,symbol , bytesipfsUrl 
-  | ["AddAdministrator" , address]  
+  | ["Mint", nat,bytes,bytes,bytes,bytes] // quantity, name , description ,symbol , bytesipfsUrl
   | ["Buy", nat, address]  //buy quantity at a seller offer price
   | ["Sell", nat, nat]  //sell quantity at a price
+  | ["AddAdministrator" , address]
   | ["Transfer", SINGLEASSET.transfer]
   | ["Balance_of", SINGLEASSET.balance_of]
   | ["Update_operators", SINGLEASSET.update_operators];
 
-
 const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsUrl:bytes, s : storage) : ret => {
-   
+
    if(quantity <= (0 as nat)) return failwith("0");
-   
+
    if(! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("1");
-   
-    const token_info: map<string, bytes> = 
+
+   const token_info: map<string, bytes> =
      Map.literal(list([
       ["name", name],
       ["description",description],
@@ -75,7 +73,7 @@ const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsU
       "views": []
       }` ;
 
-    return [list([]) as list<operation>,
+     return [list([]) as list<operation>,
           {...s,
      totalSupply: quantity,
      ledger: Big_map.literal(list([[Tezos.get_sender(),quantity as nat]])) as SINGLEASSET.Ledger.t,
@@ -85,7 +83,6 @@ const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsU
      owners: Set.add(Tezos.get_sender(),s.owners)}];
      };
 
-
 const sell = (quantity: nat, price: nat, s: storage) : ret => {
 
   //check balance of seller
@@ -93,12 +90,11 @@ const sell = (quantity: nat, price: nat, s: storage) : ret => {
   if(quantity > sellerBalance) return failwith("2");
 
   //need to allow the contract itself to be an operator on behalf of the seller
-  const newOperators = SINGLEASSET.Operators.add_operator(s.operators)(Tezos.get_source())(Tezos.get_self_address()); 
+  const newOperators = SINGLEASSET.Operators.add_operator(s.operators)(Tezos.get_source())(Tezos.get_self_address());
 
   //DECISION CHOICE: if offer already exists, we just override it
   return [list([]) as list<operation>,{...s,offers:Map.add(Tezos.get_source(),{quantity : quantity, price : price},s.offers),operators:newOperators}];
 };
-
 
 const buy = (quantity: nat, seller: address, s: storage) : ret => {
 
@@ -110,7 +106,7 @@ const buy = (quantity: nat, seller: address, s: storage) : ret => {
       if(quantity > offer.quantity) return failwith("4");
       //check if amount have been paid enough
       if(Tezos.get_amount() < (offer.price * quantity) * (1 as mutez)) return failwith("5");
-      
+
       // prepare transfer of XTZ to seller
       const op = Tezos.transaction(unit,(offer.price * quantity) * (1 as mutez),Tezos.get_contract_with_error(seller,"6"));
 
@@ -123,15 +119,15 @@ const buy = (quantity: nat, seller: address, s: storage) : ret => {
 
       return [list([op]) as list<operation>, {...s, offers : Map.update(seller,Some(newOffer),s.offers), ledger : ledger, owners : Set.add(Tezos.get_source(),s.owners)}];
     }
-  }); 
+  });
 };
 
-const main = ([p, s]: [parameter,storage]): ret => 
+const main = ([p, s]: [parameter,storage]): ret =>
     match(p, {
      Mint: (p: [nat,bytes,bytes,bytes,bytes]) => mint(p[0],p[1],p[2],p[3],p[4],s),
-     AddAdministrator : (p : address) => {if(Set.mem(Tezos.get_sender(), s.administrators)){ return [list([]),{...s,administrators:Set.add(p, s.administrators)}]} else {return failwith("1");}} ,
      Buy: (p : [nat,address]) => buy(p[0],p[1],s),
      Sell: (p : [nat,nat]) => sell(p[0],p[1], s),
+     AddAdministrator : (p : address) => {if(Set.mem(Tezos.get_sender(), s.administrators)){ return [list([]),{...s,administrators:Set.add(p, s.administrators)}]} else {return failwith("1");}} ,
      Transfer: (p: SINGLEASSET.transfer) => {
       const ret2 : [list<operation>, SINGLEASSET.storage] = SINGLEASSET.transfer(p)({ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,owners:s.owners});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
@@ -145,3 +141,4 @@ const main = ([p, s]: [parameter,storage]): ret =>
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
       }
      });
+
