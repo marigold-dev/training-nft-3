@@ -30,7 +30,7 @@ cd ..
 
 Point to the new template changing the first import line to
 
-```jsligo
+```ligolang
 #import "@ligo/fa/lib/fa2/asset/single_asset.mligo" "SINGLEASSET"
 ```
 
@@ -38,7 +38,7 @@ It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (l
 
 Change the storage definition
 
-```jsligo
+```ligolang
 type offer = {
   quantity : nat,
   price : nat
@@ -67,7 +67,7 @@ Explanations :
 
 We don't change `parameter` type because the signature is the same, but you can edit the comments because it is no more same parameter and change also to the new namespace `SINGLEASSET`
 
-```jsligo
+```ligolang
 type parameter =
   | ["Mint", nat,bytes,bytes,bytes,bytes] // quantity, name , description ,symbol , bytesipfsUrl
   | ["Buy", nat, address]  //buy quantity at a seller offer price
@@ -80,7 +80,7 @@ type parameter =
 
 Edit the `mint` function first lines to add the `quantity` extra param, and finally change the `return` end of the function
 
-```jsligo
+```ligolang
 const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsUrl:bytes, s : storage) : ret => {
 
    if(quantity <= (0 as nat)) return failwith("0");
@@ -127,7 +127,7 @@ const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsU
 
 Edit the `sell`function, replace `token_id` by `quantity`, we add/override an offer for the user
 
-```jsligo
+```ligolang
 const sell = (quantity: nat, price: nat, s: storage) : ret => {
 
   //check balance of seller
@@ -144,7 +144,7 @@ const sell = (quantity: nat, price: nat, s: storage) : ret => {
 
 Edit the `buy`function, replace `token_id` by `quantity`, check quantities, check final price is enough and update the current offer
 
-```jsligo
+```ligolang
 const buy = (quantity: nat, seller: address, s: storage) : ret => {
 
   //search for the offer
@@ -174,7 +174,7 @@ const buy = (quantity: nat, seller: address, s: storage) : ret => {
 
 Finally, update the namespaces and replace token_ids by owners on the `main` function
 
-```jsligo
+```ligolang
 const main = ([p, s]: [parameter,storage]): ret =>
     match(p, {
      Mint: (p: [nat,bytes,bytes,bytes,bytes]) => mint(p[0],p[1],p[2],p[3],p[4],s),
@@ -198,7 +198,7 @@ const main = ([p, s]: [parameter,storage]): ret =>
 
 Edit the storage file `nft.storageList.jsligo` as it. (:warning: you can change the `administrator` address to your own address or keep `alice`)
 
-```jsligo
+```ligolang
 #include "nft.jsligo"
 const default_storage =
 {
