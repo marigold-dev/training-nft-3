@@ -1361,4 +1361,6 @@ You are able to play with an unique NFT collection from the ligo library.
 
 On next training, you will use the last template `multi asset` that will allow multiple NFT collections on same contract
 
-[:arrow_right: NEXT](https://github.com/marigold-dev/training-nft-4)
+[:arrow_right: NEXT (HTML version)](https://marigold-dev.github.io/training-nft-4)
+
+[:arrow_right: NEXT (Github version)](https://github.com/marigold-dev/training-nft-4)
