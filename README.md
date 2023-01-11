@@ -6,12 +6,12 @@ Training n°3 for NFT marketplace
 
 ![https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg](https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg)
 
-This time we are gone use the single asset template. It is a bit the contrary of the nft template.
+This time we are going to use the single asset template. It is a bit the contrary of the previous NFT template because:
 
-- you have only 1 token_id, so only 1 wine collection
+- you have a unique `token_id`, so only 1 wine collection
 - you have a quantity of items into the same collection
 
-To resume, you are producting wine bottles from same collection with n quantity
+To resume, you are producting wine bottles from same collection with `n` quantity.
 
 # :arrow_forward: Go forward
 
@@ -38,7 +38,7 @@ Point to the new template changing the first import line to
 
 It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (like this you are sure to use the correct library)
 
-Change the storage definition
+Change the `offer` and `storage` definitions
 
 ```ligolang
 type offer = {
@@ -59,15 +59,15 @@ type storage =
   };
 ```
 
-Explanations :
+Explanations:
 
-- `offers` is now a `map<address,bid>`, is because you don't have to store token_id as key, now the key is the owner address. Each owner can sell a part of the unique collection
+- `offers` is now a `map<address,bid>`, because you don't have to store `token_id` as key, now the key is the owner address. Each owner can sell a part of the unique collection
 - `offer` requires a quantity, each owner will sell a part of the unique collection
-- `totalSupply` can be used to track the glocal quantity of minted collection. It avoid to recalculates all the time the quantity of each holder (this does not move so we can store this value at mint time)
-- Because the ledger is made of big map of key `owners`, we cache the keys to be able to loop on it
+- `totalSupply` in order to track the global quantity of minted collection. It avoids to recalculate all the time the quantity of each holder (this does not move so we can store this value at mint time)
+- Because the ledger is made of `big_map` of key `owners`, we cache the keys to be able to loop on it
 - we remove `token_ids` has we have an unique collection, token_id will be set to `0`
 
-We don't change `parameter` type because the signature is the same, but you can edit the comments because it is no more same parameter and change also to the new namespace `SINGLEASSET`
+We don't change `parameter` type because the signature is the same, but you can edit the comments because it is no more same parameter and also change to the new namespace `SINGLEASSET`
 
 ```ligolang
 type parameter =
@@ -80,10 +80,10 @@ type parameter =
   | ["Update_operators", SINGLEASSET.update_operators];
 ```
 
-Edit the `mint` function first lines to add the `quantity` extra param, and finally change the `return` end of the function
+Edit the `mint` function to add the `quantity` extra param, and finally change the `return`
 
 ```ligolang
-const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsUrl:bytes, s : storage) : ret => {
+const mint = (quantity : nat, name : bytes, description : bytes ,symbol : bytes , ipfsUrl : bytes, s : storage) : ret => {
 
    if(quantity <= (0 as nat)) return failwith("0");
 
@@ -127,7 +127,7 @@ const mint = (quantity:nat, name :bytes, description:bytes ,symbol:bytes , ipfsU
      };
 ```
 
-Edit the `sell`function, replace `token_id` by `quantity`, we add/override an offer for the user
+Edit the `sell` function to replace `token_id` by `quantity`, we add/override an offer for the user
 
 ```ligolang
 const sell = (quantity: nat, price: nat, s: storage) : ret => {
@@ -144,7 +144,7 @@ const sell = (quantity: nat, price: nat, s: storage) : ret => {
 };
 ```
 
-Edit the `buy`function, replace `token_id` by `quantity`, check quantities, check final price is enough and update the current offer
+Also edit the `buy` function to replace `token_id` by `quantity`, check quantities, check final price is enough and update the current offer
 
 ```ligolang
 const buy = (quantity: nat, seller: address, s: storage) : ret => {
@@ -174,7 +174,7 @@ const buy = (quantity: nat, seller: address, s: storage) : ret => {
 };
 ```
 
-Finally, update the namespaces and replace token_ids by owners on the `main` function
+Finally, update the namespaces and replace `token_ids` by owners on the `main` function
 
 ```ligolang
 const main = ([p, s]: [parameter,storage]): ret =>
@@ -216,14 +216,12 @@ const default_storage =
 ;
 ```
 
-Compile again and deploy to ghostnet
+Compile again and deploy to ghostnet.
 
 ```bash
 TAQ_LIGO_IMAGE=ligolang/ligo:0.57.0 taq compile nft.jsligo
 taq deploy nft.tz -e "testing"
-```
 
-```logs
 ┌──────────┬──────────────────────────────────────┬───────┬──────────────────┬────────────────────────────────┐
 │ Contract │ Address                              │ Alias │ Balance In Mutez │ Destination                    │
 ├──────────┼──────────────────────────────────────┼───────┼──────────────────┼────────────────────────────────┤
@@ -231,7 +229,7 @@ taq deploy nft.tz -e "testing"
 └──────────┴──────────────────────────────────────┴───────┴──────────────────┴────────────────────────────────┘
 ```
 
-:tada: Hooray ! We have finished the backend :tada:
+:tada: Hooray! We finished the smart contract _(backend)_ :tada:
 
 # :performing_arts: NFT Marketplace front
 
@@ -293,7 +291,7 @@ const refreshUserContextOnPageReload = async () => {
 
 ## Update in `MintPage.tsx`
 
-We introduce the quantity, and remove the token_id variable. Replace the full file
+We introduce the quantity, and remove the `token_id` variable. Replace the full file by the following content:
 
 ```typescript
 import OpenWithIcon from "@mui/icons-material/OpenWith";
@@ -727,7 +725,7 @@ export default function MintPage() {
 
 ## Update in `OffersPage.tsx`
 
-We introduce the quantity, and remove the token_id variable. Replace the full file
+We introduce the quantity, and remove the `token_id` variable. Replace the full file by the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
@@ -1049,7 +1047,7 @@ export default function OffersPage() {
 
 ## Update in `WineCataloguePage.tsx`
 
-We introduce the quantity, and remove the token_id variable. Replace the full file
+We introduce the quantity, and remove the `token_id` variable. Replace the full file by the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
@@ -1311,23 +1309,23 @@ export default function WineCataloguePage() {
 
 ## Let's play
 
-1. Connect with your wallet an choose `alice` account (or one of the administrators you set on the smart contract earlier). You are redirected to the Administration /mint page as there is no nft minted yet
-2. Enter these values on the form for example :
+1. Connect with your wallet an choose `alice` account (or one of the administrators you set on the smart contract earlier). You are redirected to the Administration/mint page as there is no minted NFT yet
+2. Create an asset, for example:
 
-- name : Saint Emilion - Franc la Rose
-- symbol : SEMIL
-- description : Grand cru 2007
-- quantity : 1000
+- `name`: Saint Emilion - Franc la Rose
+- `symbol`: SEMIL
+- `description`: Grand cru 2007
+- `quantity`: 1000
 
-3. Click on `Upload an image` an select a bottle picture on your computer
+3. Click on `Upload an image` and select a bottle picture on your computer
 4. Click on Mint button
 
 ![minting.png](./doc/minting.png)
 
-Your picture will be pushed to IPFS and will display, then you are asked to sign the mint operation
+Your picture will be pushed to IPFS and be displayed, then your wallet will ask you to sign the `mint` operation.
 
 - Confirm operation
-- Wait less than 1 minutes until you get the confirmation notification, the page will refresh automatically
+- Wait less than 1 minute to get the confirmation notification, the page will be automatically refreshed.
 
 ![minted.png](./doc/minted.png)
 
@@ -1340,16 +1338,16 @@ You are owner of this bottle so you can make an offer on it
 - Enter a quantity
 - Enter a price offer
 - Click on `SELL` button
-- Wait a bit for the confirmation, then it refreshes and you have an offer attached to your NFT
+- Wait a bit for the confirmation, then once automatically refreshed you have an offer attached to your NFT
 
 ![offer.png](./doc/offer.png)
 
 For buying,
 
-- Disconnect from your user and connect with another account (who has enough XTZ to buy at least 1 bottle)
-- The logged buyer can see that alice is selling some bottles from the unique collection
+- Disconnect from your user and connect with another account _(who has enough XTZ to buy at least 1 bottle)_
+- The buyer will see that alice is selling some bottles from the unique collection
 - Buy some bottles while clicking on `BUY` button
-- Wait for the confirmation, then the offer is updated on the market (depending how many bottle you bought)
+- Wait for the confirmation, then the offer is updated on the market _(depending how many bottle you bought)_
 - Click on `bottle offers` sub menu
 - You are now the owner of some bottles, you can resell a part of it at your own price, etc ...
 
