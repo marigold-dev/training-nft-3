@@ -61,11 +61,11 @@ type storage =
 
 Explanations:
 
-- `offers` is now a `map<address,bid>`, because you don't have to store `token_id` as key, now the key is the owner address. Each owner can sell a part of the unique collection
+- `offers` is now a `map<address,offer>`, because you don't have to store `token_id` as key, now the key is the owner address. Each owner can sell a part of the unique collection
 - `offer` requires a quantity, each owner will sell a part of the unique collection
-- `totalSupply` in order to track the global quantity of minted collection. It avoids to recalculate all the time the quantity of each holder (this does not move so we can store this value at mint time)
+- `totalSupply` is set at mint time in order to track the global quantity of minted items on the collection. It avoids to recalculate all the time the quantity from each owner holdings (this value is constant)
 - Because the ledger is made of `big_map` of key `owners`, we cache the keys to be able to loop on it
-- we remove `token_ids` has we have an unique collection, token_id will be set to `0`
+- Since we have a unique collection, we remove `token_ids`. `token_id` will be set to `0`
 
 We don't change `parameter` type because the signature is the same, but you can edit the comments because it is no more same parameter and also change to the new namespace `SINGLEASSET`
 
@@ -221,7 +221,9 @@ Compile again and deploy to ghostnet.
 ```bash
 TAQ_LIGO_IMAGE=ligolang/ligo:0.57.0 taq compile nft.jsligo
 taq deploy nft.tz -e "testing"
+```
 
+```logs
 ┌──────────┬──────────────────────────────────────┬───────┬──────────────────┬────────────────────────────────┐
 │ Contract │ Address                              │ Alias │ Balance In Mutez │ Destination                    │
 ├──────────┼──────────────────────────────────────┼───────┼──────────────────┼────────────────────────────────┤
@@ -291,7 +293,7 @@ const refreshUserContextOnPageReload = async () => {
 
 ## Update in `MintPage.tsx`
 
-We introduce the quantity, and remove the `token_id` variable. Replace the full file by the following content:
+We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
 
 ```typescript
 import OpenWithIcon from "@mui/icons-material/OpenWith";
@@ -725,7 +727,7 @@ export default function MintPage() {
 
 ## Update in `OffersPage.tsx`
 
-We introduce the quantity, and remove the `token_id` variable. Replace the full file by the following content:
+We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
@@ -1047,7 +1049,7 @@ export default function OffersPage() {
 
 ## Update in `WineCataloguePage.tsx`
 
-We introduce the quantity, and remove the `token_id` variable. Replace the full file by the following content:
+We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
