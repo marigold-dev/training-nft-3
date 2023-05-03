@@ -30,7 +30,7 @@ cd ..
 
 ## Do breaking changes on nft template to fit with the new library
 
-Point to the new template changing the first import line to
+Point to the new template changing the first import line of your `nft.jsligo` file to
 
 ```ligolang
 #import "@ligo/fa/lib/fa2/asset/single_asset.mligo" "SINGLEASSET"
@@ -191,7 +191,7 @@ const main = ([p, s]: [parameter,storage]): ret =>
       const ret2 : [list<operation>, SINGLEASSET.storage] = SINGLEASSET.balance_of(p)({ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,owners:s.owners});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
       },
-     Update_operators: (p: SINGLEASSET.update_operator) => {
+     Update_operators: (p: SINGLEASSET.update_operators) => {
       const ret2 : [list<operation>, SINGLEASSET.storage] = SINGLEASSET.update_ops(p)({ledger:s.ledger,metadata:s.metadata,token_metadata:s.token_metadata,operators:s.operators,owners:s.owners});
       return [ret2[0],{...s,ledger:ret2[1].ledger,metadata:ret2[1].metadata,token_metadata:ret2[1].token_metadata,operators:ret2[1].operators,owners:ret2[1].owners}];
       }
@@ -219,7 +219,7 @@ const default_storage =
 Compile again and deploy to ghostnet.
 
 ```bash
-TAQ_LIGO_IMAGE=ligolang/ligo:0.57.0 taq compile nft.jsligo
+TAQ_LIGO_IMAGE=ligolang/ligo:0.64.2 taq compile nft.jsligo
 taq deploy nft.tz -e "testing"
 ```
 
@@ -227,7 +227,7 @@ taq deploy nft.tz -e "testing"
 ┌──────────┬──────────────────────────────────────┬───────┬──────────────────┬────────────────────────────────┐
 │ Contract │ Address                              │ Alias │ Balance In Mutez │ Destination                    │
 ├──────────┼──────────────────────────────────────┼───────┼──────────────────┼────────────────────────────────┤
-│ nft.tz   │ KT1HAxs2RuoxWni1WqabGJjBvnkGtyNwVFSX │ nft   │ 0                │ https://ghostnet.ecadinfra.com │
+│ nft.tz   │ KT1SYqk9tAhgExhLawfvwc3ZCfGNzYjwi38n │ nft   │ 0                │ https://ghostnet.ecadinfra.com │
 └──────────┴──────────────────────────────────────┴───────┴──────────────────┴────────────────────────────────┘
 ```
 
