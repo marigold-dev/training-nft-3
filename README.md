@@ -36,7 +36,7 @@ Point to the new template changing the first import line of your `nft.jsligo` fi
 #import "@ligo/fa/lib/fa2/asset/single_asset.mligo" "SINGLEASSET"
 ```
 
-It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (like this you are sure to use the correct library)
+> Important ! It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (like this you are sure to use the correct library)
 
 Change the `offer` and `storage` definitions
 
@@ -219,7 +219,7 @@ const default_storage =
 Compile again and deploy to ghostnet.
 
 ```bash
-TAQ_LIGO_IMAGE=ligolang/ligo:0.64.2 taq compile nft.jsligo
+TAQ_LIGO_IMAGE=ligolang/ligo:0.68.1 taq compile nft.jsligo
 taq deploy nft.tz -e "testing"
 ```
 
@@ -227,7 +227,7 @@ taq deploy nft.tz -e "testing"
 ┌──────────┬──────────────────────────────────────┬───────┬──────────────────┬────────────────────────────────┐
 │ Contract │ Address                              │ Alias │ Balance In Mutez │ Destination                    │
 ├──────────┼──────────────────────────────────────┼───────┼──────────────────┼────────────────────────────────┤
-│ nft.tz   │ KT1SYqk9tAhgExhLawfvwc3ZCfGNzYjwi38n │ nft   │ 0                │ https://ghostnet.ecadinfra.com │
+│ nft.tz   │ KT1QAV6tJ4ZVSDSF6WqCr4qRD7a33DY3iDpj │ nft   │ 0                │ https://ghostnet.ecadinfra.com │
 └──────────┴──────────────────────────────────────┴───────┴──────────────────┴────────────────────────────────┘
 ```
 

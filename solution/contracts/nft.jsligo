@@ -4,7 +4,7 @@ type offer = { quantity: nat, price: nat };
 type storage = {
   administrators: set<address>,
   totalSupply: nat,
-  offers: map<address, offer>,
+  offers: map<address, offer>, //user sells an offer
   ledger: SINGLEASSET.Ledger.t,
   metadata: SINGLEASSET.Metadata.t,
   token_metadata: SINGLEASSET.TokenMetadata.t,
@@ -15,9 +15,11 @@ type storage = {
 type ret = [list<operation>, storage];
 
 type parameter =
-  | ["Mint", nat, bytes, bytes, bytes, bytes]
-  | ["Buy", nat, address]
-  | ["Sell", nat, nat]
+  | [
+      "Mint", nat, bytes, bytes, bytes, bytes
+    ] // quantity, name , description ,symbol , bytesipfsUrl
+  | ["Buy", nat, address] //buy quantity at a seller offer price
+  | ["Sell", nat, nat] //sell quantity at a price
   | ["AddAdministrator", address]
   | ["Transfer", SINGLEASSET.transfer]
   | ["Balance_of", SINGLEASSET.balance_of]
@@ -84,6 +86,8 @@ const mint = (
 };
 
 const sell = (quantity: nat, price: nat, s: storage): ret => {
+  //check balance of seller
+
   const sellerBalance =
     SINGLEASSET.Storage.get_amount_for_owner(
       {
@@ -95,10 +99,14 @@ const sell = (quantity: nat, price: nat, s: storage): ret => {
       }
     )(Tezos.get_source());
   if (quantity > sellerBalance) return failwith("2");
+  //need to allow the contract itself to be an operator on behalf of the seller
+
   const newOperators =
     SINGLEASSET.Operators.add_operator(s.operators)(Tezos.get_source())(
       Tezos.get_self_address()
     );
+  //DECISION CHOICE: if offer already exists, we just override it
+
   return [
     list([]) as list<operation>,
     {
@@ -114,21 +122,31 @@ const sell = (quantity: nat, price: nat, s: storage): ret => {
 };
 
 const buy = (quantity: nat, seller: address, s: storage): ret => {
+  //search for the offer
+
   return match(
     Map.find_opt(seller, s.offers),
     {
       None: () => failwith("3"),
       Some: (offer: offer) => {
+        //check if quantity is enough
+
         if (quantity > offer.quantity) return failwith("4");
+        //check if amount have been paid enough
+
         if (Tezos.get_amount() < (offer.price * quantity) * (1 as mutez)) return failwith(
           "5"
         );
+        // prepare transfer of XTZ to seller
+
         const op =
           Tezos.transaction(
             unit,
             (offer.price * quantity) * (1 as mutez),
             Tezos.get_contract_with_error(seller, "6")
           );
+        //transfer tokens from seller to buyer
+
         let ledger =
           SINGLEASSET.Ledger.decrease_token_amount_for_user(s.ledger)(seller)(
             quantity
@@ -137,6 +155,8 @@ const buy = (quantity: nat, seller: address, s: storage): ret => {
           SINGLEASSET.Ledger.increase_token_amount_for_user(ledger)(
             Tezos.get_source()
           )(quantity);
+        //update new offer
+
         const newOffer = { ...offer, quantity: abs(offer.quantity - quantity) };
         return [
           list([op]) as list<operation>,
