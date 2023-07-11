@@ -10,7 +10,7 @@ import {
   Toolbar,
   useMediaQuery,
 } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
@@ -20,7 +20,6 @@ import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { TZIP21TokenMetadata, UserContext, UserContextType } from "./App";
 import { TransactionInvalidBeaconError } from "./TransactionInvalidBeaconError";
-
 import {
   AddCircleOutlined,
   Close,
@@ -29,9 +28,10 @@ import {
 } from "@mui/icons-material";
 import { char2Bytes } from "@taquito/utils";
 import { useFormik } from "formik";
-import SwipeableViews from "react-swipeable-views";
 import * as yup from "yup";
 import { address, bytes, nat } from "./type-aliases";
+import SwipeableViews from "react-swipeable-views-react-18-fix";
+
 export default function MintPage() {
   const {
     userAddress,
@@ -100,11 +100,11 @@ export default function MintPage() {
         const requestHeaders: HeadersInit = new Headers();
         requestHeaders.set(
           "pinata_api_key",
-          `${process.env.REACT_APP_PINATA_API_KEY}`
+          `${import.meta.env.VITE_PINATA_API_KEY}`
         );
         requestHeaders.set(
           "pinata_secret_api_key",
-          `${process.env.REACT_APP_PINATA_API_SECRET}`
+          `${import.meta.env.VITE_PINATA_API_SECRET}`
         );
 
         const resFile = await fetch(
