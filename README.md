@@ -308,7 +308,7 @@ import {
   Toolbar,
   useMediaQuery,
 } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
@@ -1069,7 +1069,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import BigNumber from "bignumber.js";
 import { useFormik } from "formik";
