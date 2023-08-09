@@ -121,7 +121,7 @@ export default function WineCataloguePage() {
             page={currentPageIndex}
             onChange={(_, value) => setCurrentPageIndex(value)}
             count={Math.ceil(
-              Array.from(storage?.offers.entries()).filter(([key, offer]) =>
+              Array.from(storage?.offers.entries()).filter(([_, offer]) =>
                 offer.quantity.isGreaterThan(0)
               ).length / itemPerPage
             )}
@@ -133,7 +133,7 @@ export default function WineCataloguePage() {
           >
             {Array.from(storage?.offers.entries())
               .filter(([_, offer]) => offer.quantity.isGreaterThan(0))
-              .filter((owner, index) =>
+              .filter((_, index) =>
                 index >= currentPageIndex * itemPerPage - itemPerPage &&
                 index < currentPageIndex * itemPerPage
                   ? true

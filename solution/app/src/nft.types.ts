@@ -20,7 +20,6 @@ export type Storage = {
 };
 
 type Methods = {
-    addAdministrator: (param: address) => Promise<void>;
     balance_of: (
         requests: Array<{
             owner: address;
@@ -64,7 +63,6 @@ type Methods = {
 };
 
 type MethodsObject = {
-    addAdministrator: (param: address) => Promise<void>;
     balance_of: (params: {
         requests: Array<{
             owner: address;
