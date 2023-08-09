@@ -1,4 +1,4 @@
-#import "@ligo/fa/lib/fa2/asset/single_asset.mligo" "SINGLEASSET"
+#import "@ligo/fa/lib/fa2/asset/single_asset.jsligo" "SINGLEASSET"
 /* ERROR MAP FOR UI DISPLAY or TESTS
     const errorMap : map<string,string> = Map.literal(list([
       ["0", "Enter a positive and not null amount"],
@@ -24,7 +24,7 @@ type storage = {
   metadata: SINGLEASSET.Metadata.t,
   token_metadata: SINGLEASSET.TokenMetadata.t,
   operators: SINGLEASSET.Operators.t,
-  owners: set<SINGLEASSET.Storage.owner>
+  owners: set<SINGLEASSET.owner>
 };
 
 type ret = [list<operation>, storage];
@@ -33,14 +33,16 @@ type ret = [list<operation>, storage];
 const transfer = (p: SINGLEASSET.transfer, s: storage): ret => {
   const ret2: [list<operation>, SINGLEASSET.storage] =
     SINGLEASSET.transfer(
-      p,
-      {
-        ledger: s.ledger,
-        metadata: s.metadata,
-        token_metadata: s.token_metadata,
-        operators: s.operators,
-        owners: s.owners
-      }
+      [
+        p,
+        {
+          ledger: s.ledger,
+          metadata: s.metadata,
+          token_metadata: s.token_metadata,
+          operators: s.operators,
+          owners: s.owners
+        }
+      ]
     );
   return [
     ret2[0],
@@ -59,14 +61,16 @@ const transfer = (p: SINGLEASSET.transfer, s: storage): ret => {
 const balance_of = (p: SINGLEASSET.balance_of, s: storage): ret => {
   const ret2: [list<operation>, SINGLEASSET.storage] =
     SINGLEASSET.balance_of(
-      p,
-      {
-        ledger: s.ledger,
-        metadata: s.metadata,
-        token_metadata: s.token_metadata,
-        operators: s.operators,
-        owners: s.owners
-      }
+      [
+        p,
+        {
+          ledger: s.ledger,
+          metadata: s.metadata,
+          token_metadata: s.token_metadata,
+          operators: s.operators,
+          owners: s.owners
+        }
+      ]
     );
   return [
     ret2[0],
@@ -85,14 +89,16 @@ const balance_of = (p: SINGLEASSET.balance_of, s: storage): ret => {
 const update_operators = (p: SINGLEASSET.update_operators, s: storage): ret => {
   const ret2: [list<operation>, SINGLEASSET.storage] =
     SINGLEASSET.update_ops(
-      p,
-      {
-        ledger: s.ledger,
-        metadata: s.metadata,
-        token_metadata: s.token_metadata,
-        operators: s.operators,
-        owners: s.owners
-      }
+      [
+        p,
+        {
+          ledger: s.ledger,
+          metadata: s.metadata,
+          token_metadata: s.token_metadata,
+          operators: s.operators,
+          owners: s.owners
+        }
+      ]
     );
   return [
     ret2[0],

@@ -33,7 +33,7 @@ cd ..
 Point to the new template changing the first import line of your `nft.jsligo` file to
 
 ```ligolang
-#import "@ligo/fa/lib/fa2/asset/single_asset.mligo" "SINGLEASSET"
+#import "@ligo/fa/lib/fa2/asset/single_asset.jsligo" "SINGLEASSET"
 ```
 
 > Important ! It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (like this you are sure to use the correct library)
@@ -248,7 +248,7 @@ const default_storage =
         ) as SINGLEASSET.Metadata.t,
         token_metadata: Big_map.empty as SINGLEASSET.TokenMetadata.t,
         operators: Big_map.empty as SINGLEASSET.Operators.t,
-        owners: Set.empty as set<SINGLEASSET.Storage.owner>
+        owners: Set.empty as set<SINGLEASSET.owner>
     };
 ```
 

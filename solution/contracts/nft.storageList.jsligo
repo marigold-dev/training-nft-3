@@ -34,5 +34,5 @@ const default_storage =
         ) as SINGLEASSET.Metadata.t,
         token_metadata: Big_map.empty as SINGLEASSET.TokenMetadata.t,
         operators: Big_map.empty as SINGLEASSET.Operators.t,
-        owners: Set.empty as set<SINGLEASSET.Storage.owner>
+        owners: Set.empty as set<SINGLEASSET.owner>
     };
