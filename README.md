@@ -212,14 +212,15 @@ const buy = ([quantity, seller]: [nat, address], s: storage): ret => {
 Edit the storage file `nft.storageList.jsligo` as it. (:warning: you can change the `administrator` address to your own address or keep `alice`)
 
 ```ligolang
-#include "nft.jsligo"
+#import "nft.jsligo" "Contract"
+#import "@ligo/fa/lib/fa2/asset/single_asset.jsligo" "SINGLEASSET"
 const default_storage =
     {
         administrators: Set.literal(
             list(["tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb" as address])
         ) as set<address>,
         totalSupply: 0 as nat,
-        offers: Map.empty as map<address, offer>,
+        offers: Map.empty as map<address, Contract.offer>,
         ledger: Big_map.empty as SINGLEASSET.Ledger.t,
         metadata: Big_map.literal(
             list(
@@ -250,12 +251,13 @@ const default_storage =
         operators: Big_map.empty as SINGLEASSET.Operators.t,
         owners: Set.empty as set<SINGLEASSET.owner>
     };
+
 ```
 
 Compile again and deploy to ghostnet.
 
 ```bash
-TAQ_LIGO_IMAGE=ligolang/ligo:0.71.0 taq compile nft.jsligo
+TAQ_LIGO_IMAGE=ligolang/ligo:0.73.0 taq compile nft.jsligo
 taq deploy nft.tz -e "testing"
 ```
 
