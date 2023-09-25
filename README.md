@@ -6,14 +6,12 @@ Training n°3 for NFT marketplace
 
 ![https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg](https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg)
 
-This time we are going to use the single asset template. It is a bit the contrary of the previous NFT template because:
+This time we are going to use the single asset template. It is the opposite of the previous NFT template because:
 
 - you have a unique `token_id`, so only 1 wine collection
-- you have a quantity of items into the same collection
+- you have a certain quantity of items in the same collection
 
-To resume, you are producting wine bottles from same collection with `n` quantity.
-
-# :arrow_forward: Go forward
+To sum up, you are producing wine bottles from the same collection with `n` quantity.
 
 Keep your code from previous training or get the solution [here](https://github.com/marigold-dev/training-nft-2/tree/main/solution)
 
@@ -26,9 +24,7 @@ yarn install
 cd ..
 ```
 
-# :scroll: Smart contract
-
-## Do breaking changes on nft template to fit with the new library
+## :scroll: Smart contract
 
 Point to the new template changing the first import line of your `nft.jsligo` file to
 
@@ -36,7 +32,7 @@ Point to the new template changing the first import line of your `nft.jsligo` fi
 #import "@ligo/fa/lib/fa2/asset/single_asset.jsligo" "SINGLEASSET"
 ```
 
-> Important ! It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (like this you are sure to use the correct library)
+It means you will change the namespace from `NFT` to `SINGLEASSET` everywhere (like this you are sure to use the correct library)
 
 Change the `offer` and `storage` definitions
 
@@ -59,11 +55,11 @@ type storage =
   };
 ```
 
-Explanations:
+Explanation:
 
-- `offers` is now a `map<address,offer>`, because you don't have to store `token_id` as key, now the key is the owner address. Each owner can sell a part of the unique collection
+- `offers` is now a `map<address,offer>`, because you don't have to store `token_id` as a key, now the key is the owner's address. Each owner can sell a part of the unique collection
 - `offer` requires a quantity, each owner will sell a part of the unique collection
-- `totalSupply` is set at mint time in order to track the global quantity of minted items on the collection. It avoids to recalculate all the time the quantity from each owner holdings (this value is constant)
+- `totalSupply` is set while minting in order to track the global quantity of minted items on the collection. It makes it unnecessary to recalculate each time the quantity from each owner's holdings (this value is constant)
 - Because the ledger is made of `big_map` of key `owners`, we cache the keys to be able to loop on it
 - Since we have a unique collection, we remove `token_ids`. `token_id` will be set to `0`
 
@@ -269,9 +265,9 @@ taq deploy nft.tz -e "testing"
 └──────────┴──────────────────────────────────────┴───────┴──────────────────┴────────────────────────────────┘
 ```
 
-:tada: Hooray! We finished the smart contract _(backend)_ :tada:
+We finished the smart contract! _(backend)_
 
-# :performing_arts: NFT Marketplace front
+## :performing_arts: NFT Marketplace front
 
 Generate Typescript classes and go to the frontend to run the server
 
@@ -282,7 +278,7 @@ yarn install
 yarn dev
 ```
 
-## Update in `App.tsx`
+### Update in `App.tsx`
 
 We just need to fetch the token_id == 0.
 Replace the function `refreshUserContextOnPageReload` by
@@ -329,7 +325,7 @@ const refreshUserContextOnPageReload = async () => {
 };
 ```
 
-## Update in `MintPage.tsx`
+### Update in `MintPage.tsx`
 
 We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
 
@@ -763,9 +759,9 @@ export default function MintPage() {
 }
 ```
 
-## Update in `OffersPage.tsx`
+### Update in `OffersPage.tsx`
 
-We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
+We introduce the quantity and remove the `token_id` variable. Replace the full file with the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
@@ -1085,9 +1081,9 @@ export default function OffersPage() {
 }
 ```
 
-## Update in `WineCataloguePage.tsx`
+### Update in `WineCataloguePage.tsx`
 
-We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
+We introduce the quantity and remove the `token_id` variable. Replace the full file with the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
@@ -1347,9 +1343,9 @@ export default function WineCataloguePage() {
 }
 ```
 
-## Let's play
+### Let's play
 
-1. Connect with your wallet an choose `alice` account (or one of the administrators you set on the smart contract earlier). You are redirected to the Administration/mint page as there is no minted NFT yet
+1. Connect with your wallet and choose `alice` account (or one of the administrators you set on the smart contract earlier). You are redirected to the Administration/mint page as there is no minted NFT yet
 2. Create an asset, for example:
 
 - `name`: Saint Emilion - Franc la Rose
@@ -1358,11 +1354,11 @@ export default function WineCataloguePage() {
 - `quantity`: 1000
 
 3. Click on `Upload an image` and select a bottle picture on your computer
-4. Click on Mint button
+4. Click on the Mint button
 
 ![minting.png](./doc/minting.png)
 
-Your picture will be pushed to IPFS and be displayed, then your wallet will ask you to sign the `mint` operation.
+Your picture will be pushed to IPFS and displayed, then your wallet will ask you to sign the `mint` operation.
 
 - Confirm operation
 - Wait less than 1 minute to get the confirmation notification, the page will be automatically refreshed.
@@ -1373,11 +1369,11 @@ Now you can see the `Trading` menu and the `Bottle offers` sub menu
 
 Click on the sub-menu entry
 
-You are owner of this bottle so you can make an offer on it
+You are the owner of this bottle so you can make an offer on it
 
 - Enter a quantity
 - Enter a price offer
-- Click on `SELL` button
+- Click on the `SELL` button
 - Wait a bit for the confirmation, then once automatically refreshed you have an offer attached to your NFT
 
 ![offer.png](./doc/offer.png)
@@ -1395,9 +1391,9 @@ For buying,
 
 # :palm_tree: Conclusion :sun_with_face:
 
-You are able to play with an unique NFT collection from the ligo library.
+You are now able to play with a unique NFT collection from the Ligo library.
 
-On next training, you will use the last template `multi asset` that will allow multiple NFT collections on same contract
+In the next lesson, you will use the last template `multi-asset` that will allow multiple NFT collections on the same contract
 
 [:arrow_right: NEXT (HTML version)](https://marigold-dev.github.io/training-nft-4)
 
