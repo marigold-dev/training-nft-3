@@ -1,4 +1,5 @@
 #import "@ligo/fa/lib/fa2/asset/single_asset.jsligo" "SINGLEASSET"
+
 /* ERROR MAP FOR UI DISPLAY or TESTS
     const errorMap : map<string,string> = Map.literal(list([
       ["0", "Enter a positive and not null amount"],
@@ -11,12 +12,9 @@
     ]));
 */
 
-type offer = {
-  quantity: nat,
-  price: nat
-};
+export type offer = { quantity: nat, price: nat };
 
-type storage = {
+export type storage = {
   administrators: set<address>,
   totalSupply: nat,
   offers: map<address, offer>, //user sells an offer
@@ -33,16 +31,14 @@ type ret = [list<operation>, storage];
 const transfer = (p: SINGLEASSET.transfer, s: storage): ret => {
   const ret2: [list<operation>, SINGLEASSET.storage] =
     SINGLEASSET.transfer(
-      [
-        p,
-        {
-          ledger: s.ledger,
-          metadata: s.metadata,
-          token_metadata: s.token_metadata,
-          operators: s.operators,
-          owners: s.owners
-        }
-      ]
+      p,
+      {
+        ledger: s.ledger,
+        metadata: s.metadata,
+        token_metadata: s.token_metadata,
+        operators: s.operators,
+        owners: s.owners
+      }
     );
   return [
     ret2[0],
@@ -61,16 +57,14 @@ const transfer = (p: SINGLEASSET.transfer, s: storage): ret => {
 const balance_of = (p: SINGLEASSET.balance_of, s: storage): ret => {
   const ret2: [list<operation>, SINGLEASSET.storage] =
     SINGLEASSET.balance_of(
-      [
-        p,
-        {
-          ledger: s.ledger,
-          metadata: s.metadata,
-          token_metadata: s.token_metadata,
-          operators: s.operators,
-          owners: s.owners
-        }
-      ]
+      p,
+      {
+        ledger: s.ledger,
+        metadata: s.metadata,
+        token_metadata: s.token_metadata,
+        operators: s.operators,
+        owners: s.owners
+      }
     );
   return [
     ret2[0],
@@ -88,17 +82,15 @@ const balance_of = (p: SINGLEASSET.balance_of, s: storage): ret => {
 @entry
 const update_operators = (p: SINGLEASSET.update_operators, s: storage): ret => {
   const ret2: [list<operation>, SINGLEASSET.storage] =
-    SINGLEASSET.update_ops(
-      [
-        p,
-        {
-          ledger: s.ledger,
-          metadata: s.metadata,
-          token_metadata: s.token_metadata,
-          operators: s.operators,
-          owners: s.owners
-        }
-      ]
+    SINGLEASSET.update_operators(
+      p,
+      {
+        ledger: s.ledger,
+        metadata: s.metadata,
+        token_metadata: s.token_metadata,
+        operators: s.operators,
+        owners: s.owners
+      }
     );
   return [
     ret2[0],
@@ -115,12 +107,17 @@ const update_operators = (p: SINGLEASSET.update_operators, s: storage): ret => {
 
 @entry
 const mint = (
-  [quantity, name, description, symbol, ipfsUrl]
-    : [nat, bytes, bytes, bytes, bytes],
+  [quantity, name, description, symbol, ipfsUrl]: [
+    nat,
+    bytes,
+    bytes,
+    bytes,
+    bytes
+  ],
   s: storage
 ): ret => {
   if (quantity <= (0 as nat)) return failwith("0");
-  if (!Set.mem(Tezos.get_sender(), s.administrators)) return failwith("1");
+  if (! Set.mem(Tezos.get_sender(), s.administrators)) return failwith("1");
   const token_info: map<string, bytes> =
     Map.literal(
       list(
@@ -193,11 +190,11 @@ const sell = ([quantity, price]: [nat, nat], s: storage): ret => {
 const buy = ([quantity, seller]: [nat, address], s: storage): ret => {
   //search for the offer
 
-  return match(
-    Map.find_opt(seller, s.offers),
-    {
-      None: () => failwith("3"),
-      Some: (offer: offer) => {
+  return match(Map.find_opt(seller, s.offers)) {
+    when (None()):
+      failwith("3")
+    when (Some(offer)):
+      do {
         //check if quantity is enough
 
         if (quantity > offer.quantity) return failwith("4");
@@ -220,8 +217,8 @@ const buy = ([quantity, seller]: [nat, address], s: storage): ret => {
           SINGLEASSET.Ledger.decrease_token_amount_for_user(s.ledger)(seller)(
             quantity
           );
-        ledger =
-          SINGLEASSET.Ledger.increase_token_amount_for_user(ledger)(
+        ledger
+        = SINGLEASSET.Ledger.increase_token_amount_for_user(ledger)(
             Tezos.get_source()
           )(quantity);
         //update new offer
@@ -237,6 +234,5 @@ const buy = ([quantity, seller]: [nat, address], s: storage): ret => {
           }
         ]
       }
-    }
-  )
+  }
 };
