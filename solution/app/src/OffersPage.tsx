@@ -1,5 +1,6 @@
 import { InfoOutlined } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
+import * as api from "@tzkt/sdk-api";
 
 import {
   Box,
@@ -47,6 +48,8 @@ type Offer = {
 };
 
 export default function OffersPage() {
+  api.defaults.baseUrl = "https://api.ghostnet.tzkt.io";
+
   const [selectedTokenId, setSelectedTokenId] = React.useState<number>(0);
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(1);
 
@@ -83,9 +86,18 @@ export default function OffersPage() {
     if (storage) {
       console.log("context is not empty, init page now");
 
+      const ledgerBigMapId = (
+        storage.ledger as unknown as { id: BigNumber }
+      ).id.toNumber();
+
+      const ownersKeys = await api.bigMapsGetKeys(ledgerBigMapId, {
+        micheline: "Json",
+        active: true,
+      });
+
       await Promise.all(
-        storage.owners.map(async (owner) => {
-          if (owner === userAddress) {
+        ownersKeys.map(async (ownerKey) => {
+          if (ownerKey.key === userAddress) {
             const ownerBalance = await storage.ledger.get(
               userAddress as address
             );
@@ -98,7 +110,7 @@ export default function OffersPage() {
 
             console.log(
               "found for " +
-                owner +
+                ownerKey.key +
                 " on token_id " +
                 0 +
                 " with balance " +
@@ -191,7 +203,7 @@ export default function OffersPage() {
                         <Typography>{"ID : " + 0}</Typography>
                         <Typography>
                           {"Description : " +
-                            nftContratTokenMetadataMap.get(0)?.description}
+                            nftContratTokenMetadataMap.get("0")?.description}
                         </Typography>
                       </Box>
                     }
@@ -199,14 +211,14 @@ export default function OffersPage() {
                     <InfoOutlined />
                   </Tooltip>
                 }
-                title={nftContratTokenMetadataMap.get(0)?.name}
+                title={nftContratTokenMetadataMap.get("0")?.name}
               />
               <CardMedia
                 sx={{ width: "auto", marginLeft: "33%" }}
                 component="img"
                 height="100px"
                 image={nftContratTokenMetadataMap
-                  .get(0)
+                  .get("0")
                   ?.thumbnailUri?.replace(
                     "ipfs://",
                     "https://gateway.pinata.cloud/ipfs/"

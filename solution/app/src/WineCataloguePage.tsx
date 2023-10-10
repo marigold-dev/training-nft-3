@@ -149,7 +149,8 @@ export default function WineCataloguePage() {
                             <Typography>{"ID : " + 0}</Typography>
                             <Typography>
                               {"Description : " +
-                                nftContratTokenMetadataMap.get(0)?.description}
+                                nftContratTokenMetadataMap.get("0")
+                                  ?.description}
                             </Typography>
                             <Typography>{"Seller : " + owner} </Typography>
                           </Box>
@@ -158,14 +159,14 @@ export default function WineCataloguePage() {
                         <InfoOutlined />
                       </Tooltip>
                     }
-                    title={nftContratTokenMetadataMap.get(0)?.name}
+                    title={nftContratTokenMetadataMap.get("0")?.name}
                   />
                   <CardMedia
                     sx={{ width: "auto", marginLeft: "33%" }}
                     component="img"
                     height="100px"
                     image={nftContratTokenMetadataMap
-                      .get(0)
+                      .get("0")
                       ?.thumbnailUri?.replace(
                         "ipfs://",
                         "https://gateway.pinata.cloud/ipfs/"

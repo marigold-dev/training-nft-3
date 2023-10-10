@@ -2,11 +2,11 @@ import { NetworkType } from "@airgap/beacon-types";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { TezosToolkit } from "@taquito/taquito";
 import { TokenMetadata, tzip12, Tzip12Module } from "@taquito/tzip12";
+import * as api from "@tzkt/sdk-api";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./App.css";
 import { NftWalletType, Storage } from "./nft.types";
 import Paperbase from "./Paperbase";
-
 export type TZIP21TokenMetadata = TokenMetadata & {
   artifactUri?: string; //A URI (as defined in the JSON Schema Specification) to the asset.
   displayUri?: string; //A URI (as defined in the JSON Schema Specification) to an image of the asset.
@@ -28,9 +28,9 @@ export type UserContextType = {
   nftContractAddress: string;
   nftContrat: NftWalletType | null;
   setNftContrat: Dispatch<SetStateAction<NftWalletType | null>>;
-  nftContratTokenMetadataMap: Map<number, TZIP21TokenMetadata>;
+  nftContratTokenMetadataMap: Map<string, TZIP21TokenMetadata>;
   setNftContratTokenMetadataMap: Dispatch<
-    SetStateAction<Map<number, TZIP21TokenMetadata>>
+    SetStateAction<Map<string, TZIP21TokenMetadata>>
   >;
   refreshUserContextOnPageReload: () => Promise<void>;
 };
@@ -39,12 +39,14 @@ export let UserContext = React.createContext<UserContextType | null>(null);
 const nftContractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 function App() {
+  api.defaults.baseUrl = "https://api.ghostnet.tzkt.io";
+
   const [storage, setStorage] = useState<Storage | null>(null);
   const [userAddress, setUserAddress] = useState<string>("");
   const [userBalance, setUserBalance] = useState<number>(0);
   const [nftContrat, setNftContrat] = useState<NftWalletType | null>(null);
   const [nftContratTokenMetadataMap, setNftContratTokenMetadataMap] = useState<
-    Map<number, TZIP21TokenMetadata>
+    Map<string, TZIP21TokenMetadata>
   >(new Map());
 
   const [Tezos, _] = useState<TezosToolkit>(
@@ -73,7 +75,7 @@ function App() {
         let tokenMetadata: TZIP21TokenMetadata = (await c
           .tzip12()
           .getTokenMetadata(0)) as TZIP21TokenMetadata;
-        nftContratTokenMetadataMap.set(0, tokenMetadata);
+        nftContratTokenMetadataMap.set("0", tokenMetadata);
 
         setNftContratTokenMetadataMap(new Map(nftContratTokenMetadataMap)); //new Map to force refresh
       } catch (error) {

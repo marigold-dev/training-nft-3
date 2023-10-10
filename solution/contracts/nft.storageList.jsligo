@@ -1,12 +1,12 @@
 #import "nft.jsligo" "Contract"
 
-const default_storage = {
+const default_storage: Contract.storage = {
     administrators: Set.literal(
         list(["tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb" as address])
     ) as set<address>,
     totalSupply: 0 as nat,
     offers: Map.empty as map<address, Contract.offer>,
-    ledger: Big_map.empty as Contract.SINGLEASSET.Ledger.t,
+    ledger: Big_map.empty as Contract.FA2Impl.SingleAsset.ledger,
     metadata: Big_map.literal(
         list(
             [
@@ -31,8 +31,7 @@ const default_storage = {
                 ]
             ]
         )
-    ) as Contract.SINGLEASSET.Metadata.t,
-    token_metadata: Big_map.empty as Contract.SINGLEASSET.TokenMetadata.t,
-    operators: Big_map.empty as Contract.SINGLEASSET.Operators.t,
-    owners: Set.empty as set<Contract.SINGLEASSET.owner>
+    ) as Contract.FA2Impl.TZIP16.metadata,
+    token_metadata: Big_map.empty as Contract.FA2Impl.TZIP12.tokenMetadata,
+    operators: Big_map.empty as Contract.FA2Impl.SingleAsset.operators,
 };
