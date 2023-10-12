@@ -6,7 +6,7 @@ Training n°3 for NFT marketplace
 
 ![https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg](https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg)
 
-This time we are going to use the single asset template. It is the opposite of the previous NFT template because:
+This time, let's use the single asset template. It is the opposite of the previous NFT template because:
 
 - you have a unique `token_id`, so only 1 wine collection
 - you have a certain quantity of items in the same collection
@@ -106,7 +106,7 @@ const mint = (
 };
 ```
 
-Edit the `sell` function to replace `token_id` by `quantity`, we add/override an offer for the user
+Edit the `sell` function to replace `token_id` by `quantity`, add/override an offer for the user
 
 ```ligolang
 @entry
@@ -257,7 +257,7 @@ taq deploy nft.tz -e "testing"
 └──────────┴──────────────────────────────────────┴───────┴──────────────────┴────────────────────────────────┘
 ```
 
-We finished the smart contract! _(backend)_
+**The smart contract! _(backend)_ is finished**
 
 ## :performing_arts: NFT Marketplace front
 
@@ -272,7 +272,7 @@ yarn dev
 
 ### Update in `App.tsx`
 
-We just need to fetch the token_id == 0.
+Fetch the `token_id == 0`.
 Replace the function `refreshUserContextOnPageReload` by
 
 ```typescript
@@ -319,7 +319,7 @@ const refreshUserContextOnPageReload = async () => {
 
 ### Update in `MintPage.tsx`
 
-We introduce the quantity and remove the `token_id` variable. Replace the full file by the following content:
+The quantity field is added and the `token_id` field is removed. Replace the full file by the following content:
 
 ```typescript
 import OpenWithIcon from "@mui/icons-material/OpenWith";
@@ -753,7 +753,7 @@ export default function MintPage() {
 
 ### Update in `OffersPage.tsx`
 
-We introduce the quantity and remove the `token_id` variable. Replace the full file with the following content:
+The quantity field is added and the `token_id` filed is removed. Replace the full file with the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
@@ -1087,7 +1087,7 @@ export default function OffersPage() {
 
 ### Update in `WineCataloguePage.tsx`
 
-We introduce the quantity and remove the `token_id` variable. Replace the full file with the following content:
+The quantity field is added and `token_id` filed is removed. Replace the full file with the following content:
 
 ```typescript
 import { InfoOutlined } from "@mui/icons-material";
