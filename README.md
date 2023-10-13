@@ -1,8 +1,10 @@
-## :round_pushpin: [See Github version and full code here](https://github.com/marigold-dev/training-nft-3)
+---
+id: build-an-nft-marketplace
+title: NFT Marketplace Part 3
+lastUpdated: 11th October 2023
+---
 
-# training-nft-3
-
-Training n°3 for NFT marketplace
+## Introduction
 
 ![https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg](https://vinepair.com/wp-content/uploads/2016/06/Cellar-HEAD.jpg)
 
@@ -24,7 +26,7 @@ yarn install
 cd ..
 ```
 
-## :scroll: Smart contract
+## Smart Contract
 
 Point to the new template changing the first import line of your `nft.jsligo` file to
 
@@ -54,7 +56,7 @@ export type storage = {
 Explanation:
 
 - `offers` is now a `map<address,offer>`, because you don't have to store `token_id` as a key, now the key is the owner's address. Each owner can sell a part of the unique collection
-- `offer` requires a quantity, each owner will sell a part of the unique collection
+- `offer` requires a quantity, each owner is selling a part of the unique collection
 - `totalSupply` is set while minting in order to track the global quantity of minted items on the collection. It makes it unnecessary to recalculate each time the quantity from each owner's holdings (this value is constant)
 
 Edit the `mint` function to add the `quantity` extra param, and finally change the `return`
@@ -259,7 +261,7 @@ taq deploy nft.tz -e "testing"
 
 **The smart contract! _(backend)_ is finished**
 
-## :performing_arts: NFT Marketplace front
+## NFT Marketplace front
 
 Generate Typescript classes and go to the frontend to run the server
 
@@ -1350,25 +1352,25 @@ export default function WineCataloguePage() {
 
 ### Let's play
 
-- Connect with your wallet and choose `alice` account (or one of the administrators you set on the smart contract earlier). You are redirected to the Administration/mint page as there is no minted NFT yet
+- Connect with your wallet and choose **alice** account (or one of the administrators you set on the smart contract earlier). You are redirected to the Administration/mint page as there is no minted NFT yet
 - Create an asset, for example:
   - `name`: Saint Emilion - Franc la Rose
   - `symbol`: SEMIL
   - `description`: Grand cru 2007
   - `quantity`: 1000
-- Click on `Upload an image` and select a bottle picture on your computer
+- Click on **Upload an image** and select a bottle picture on your computer
 - Click on the Mint button
 
-![minting.png](./doc/minting.png)
+![minting.png](/images/minting.png)
 
-Your picture will be pushed to IPFS and displayed, then your wallet will ask you to sign the `mint` operation.
+Your picture is pushed to IPFS and displayed, then your wallet asks you to sign the `mint` operation.
 
 - Confirm operation
-- Wait less than 1 minute to get the confirmation notification, the page will be automatically refreshed.
+- Wait less than 1 minute to get the confirmation notification, the page is automatically refreshed.
 
-![minted.png](./doc/minted.png)
+![minted.png](/images/minted.png)
 
-Now you can see the `Trading` menu and the `Bottle offers` sub menu
+Now you can see the **Trading** menu and the **Bottle offers** sub menu
 
 Click on the sub-menu entry
 
@@ -1376,28 +1378,26 @@ You are the owner of this bottle so you can make an offer on it
 
 - Enter a quantity
 - Enter a price offer
-- Click on the `SELL` button
+- Click on the **SELL** button
 - Wait a bit for the confirmation, then once automatically refreshed you have an offer attached to your NFT
 
-![offer.png](./doc/offer.png)
+![offer.png](/images/offer.png)
 
 For buying,
 
 - Disconnect from your user and connect with another account _(who has enough XTZ to buy at least 1 bottle)_
 - The buyer will see that alice is selling some bottles from the unique collection
-- Buy some bottles while clicking on `BUY` button
+- Buy some bottles while clicking on **BUY** button
 - Wait for the confirmation, then the offer is updated on the market _(depending how many bottle you bought)_
-- Click on `bottle offers` sub menu
+- Click on **bottle offers** sub menu
 - You are now the owner of some bottles, you can resell a part of it at your own price, etc ...
 
-![buy.png](./doc/buy.png)
+![buy.png](/images/buy_part3.png)
 
-# :palm_tree: Conclusion :sun_with_face:
+## Conclusion
 
 You are now able to play with a unique NFT collection from the Ligo library.
 
-In the next lesson, you will use the last template `multi-asset` that will allow multiple NFT collections on the same contract
+In the next lesson, you will use the last template **multi-asset** that will allow multiple NFT collections on the same contract
 
-[:arrow_right: NEXT (HTML version)](https://marigold-dev.github.io/training-nft-4)
-
-[:arrow_right: NEXT (Github version)](https://github.com/marigold-dev/training-nft-4)
+To continue, let's go to [Part 4](/tutorials/build-an-nft-marketplace/part-4).
