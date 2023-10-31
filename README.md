@@ -46,10 +46,10 @@ export type storage = {
   totalSupply: nat,
   offers: map<address, offer>, //user sells an offer
 
-  ledger: FA2Impl.Datatypes.ledger,
+  ledger: FA2Impl.SingleAsset.ledger,
   metadata: FA2Impl.TZIP16.metadata,
   token_metadata: FA2Impl.TZIP12.tokenMetadata,
-  operators: FA2Impl.Datatypes.operators,
+  operators: FA2Impl.SingleAsset.operators,
 };
 ```
 
@@ -116,7 +116,7 @@ const sell = ([quantity, price]: [nat, nat], s: storage): ret => {
   //check balance of seller
 
   const sellerBalance =
-    FA2Impl.Sidecar.get_amount_for_owner(
+    FA2Impl.SingleAsset.get_amount_for_owner(
       {
         ledger: s.ledger,
         metadata: s.metadata,
@@ -128,7 +128,7 @@ const sell = ([quantity, price]: [nat, nat], s: storage): ret => {
   //need to allow the contract itself to be an operator on behalf of the seller
 
   const newOperators =
-    FA2Impl.Sidecar.add_operator(s.operators)(Tezos.get_source())(
+    FA2Impl.SingleAsset.add_operator(s.operators)(Tezos.get_source())(
       Tezos.get_self_address()
     );
   //DECISION CHOICE: if offer already exists, we just override it
@@ -179,11 +179,11 @@ const buy = ([quantity, seller]: [nat, address], s: storage): ret => {
         //transfer tokens from seller to buyer
 
         let ledger =
-          FA2Impl.Sidecar.decrease_token_amount_for_user(s.ledger)(seller)(
+          FA2Impl.SingleAsset.decrease_token_amount_for_user(s.ledger)(seller)(
             quantity
           );
         ledger
-        = FA2Impl.Sidecar.increase_token_amount_for_user(ledger)(
+        = FA2Impl.SingleAsset.increase_token_amount_for_user(ledger)(
             Tezos.get_source()
           )(quantity);
         //update new offer

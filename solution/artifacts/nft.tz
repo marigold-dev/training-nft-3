@@ -300,9 +300,17 @@
                                SOME ;
                                PUSH string "symbol" ;
                                UPDATE ;
-                               DIG 5 ;
+                               DUP 6 ;
                                SOME ;
                                PUSH string "thumbnailUri" ;
+                               UPDATE ;
+                               DUP 6 ;
+                               SOME ;
+                               PUSH string "displayUri" ;
+                               UPDATE ;
+                               DIG 5 ;
+                               SOME ;
+                               PUSH string "artifactUri" ;
                                UPDATE ;
                                PUSH bytes 0x5b22545a49502d3132225d ;
                                SOME ;
