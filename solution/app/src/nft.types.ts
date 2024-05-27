@@ -3,19 +3,20 @@ import { ContractAbstractionFromContractType, WalletContractAbstractionFromContr
 import { address, BigMap, bytes, contract, MMap, nat } from './type-aliases';
 
 export type Storage = {
-    administrators: Array<address>;
-    totalSupply: nat;
-    offers: MMap<address, {
-        quantity: nat;
-        price: nat;
-    }>;
     ledger: BigMap<address, nat>;
-    metadata: BigMap<string, bytes>;
+    operators: BigMap<address, Array<address>>;
     token_metadata: BigMap<nat, {
         token_id: nat;
         token_info: MMap<string, bytes>;
     }>;
-    operators: BigMap<address, Array<address>>;
+    metadata: BigMap<string, bytes>;
+    extension: {
+        administrators: Array<address>;
+        offers: MMap<address, {
+            quantity: nat;
+            price: nat;
+        }>;
+    };
 };
 
 type Methods = {
@@ -60,6 +61,24 @@ type Methods = {
             }>;
         }>) => Promise<void>;
 };
+
+export type BuyParams = nat
+export type SellParams = nat
+export type MintParams = nat
+export type AddOperatorParams = address
+export type RemoveOperatorParams = address
+export type BalanceOfParams = Array<{
+        owner: address;
+        token_id: nat;
+    }>
+export type TransferParams = Array<{
+        from_: address;
+        txs: Array<{
+            to_: address;
+            token_id: nat;
+            amount: nat;
+        }>;
+    }>
 
 type MethodsObject = {
     buy: (params: {

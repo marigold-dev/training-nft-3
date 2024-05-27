@@ -102,7 +102,7 @@ export default function OffersPage() {
               userAddress as address
             );
             setOwnerBalance(ownerBalance.toNumber());
-            const ownerOffers = await storage.offers.get(
+            const ownerOffers = await storage.extension.offers.get(
               userAddress as address
             );
             if (ownerOffers && ownerOffers.quantity != BigNumber(0))
